@@ -14,12 +14,23 @@
     "build:lib:tsdown": "bun run --cwd packages/qwik-lib build:tsdown",
     "build:lib:vp": "bun run --cwd packages/qwik-lib build:vp",
     "check": "bun run --cwd packages/qwik-lib check && bun run --cwd apps/consumer check",
+    "lint": "markdownlint-cli2 && textlint --cache --ignore-path .gitignore \"**/*.md\"",
     "verify": "bun run check && bun run --cwd packages/qwik-lib validate && bun run --cwd apps/consumer test:ssr",
     "report": "bun run scripts/report-build.mjs"
   },
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "esbuild",
+    "sharp"
+  ],
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
+    "markdownlint-cli2": "^0.22.1",
     "publint": "^0.3.15",
+    "slopless": "^0.2.22",
+    "textlint": "^15.7.1",
+    "textlint-filter-rule-comments": "^1.3.0",
+    "textlint-rule-terminology": "^5.2.16",
     "tsx": "^4.21.0"
   }
 }

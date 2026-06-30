@@ -1,0 +1,13 @@
+{
+  "filters": {
+    "comments": true
+  },
+  "rules": {
+    "terminology": true,
+    "preset-slopless": {
+      "coleman-liau": false,
+      "flesch-kincaid": false,
+      "gunning-fog": false
+    }
+  }
+}
