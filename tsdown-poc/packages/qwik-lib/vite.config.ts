@@ -1,5 +1,5 @@
 import { qwikVite } from "@builder.io/qwik/optimizer";
-import { defineConfig } from "vite";
+import { defineConfig } from "vite-plus";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
 
@@ -33,7 +33,37 @@ export default defineConfig(() => {
         ],
       },
     },
+    pack: {
+      entry: {
+        index: "./src/index.ts",
+      },
+      root: "src",
+      outDir: "lib",
+      clean: ["lib", "lib-types"],
+      target: "es2020",
+      platform: "browser",
+      format: ["esm", "cjs"],
+      unbundle: true,
+      dts: false,
+      deps: {
+        neverBundle: [
+          /^node:.*/,
+          /^@builder\.io\/qwik(\/.*)?$/,
+          ...excludeAll(dependencies),
+          ...excludeAll(peerDependencies),
+        ],
+        onlyBundle: false,
+      },
+      outExtensions({ format }) {
+        return {
+          js: format === "cjs" ? ".qwik.cjs" : ".qwik.mjs",
+        };
+      },
+      outputOptions: {
+        preserveModules: true,
+        preserveModulesRoot: "src",
+      },
+    },
     plugins: [qwikVite(), tsconfigPaths({ root: "." })],
   };
 });
-
