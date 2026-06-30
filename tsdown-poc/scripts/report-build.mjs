@@ -1,4 +1,4 @@
-import { readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
@@ -55,4 +55,5 @@ const body = [
   ""
 ].join("\n");
 
+await mkdir(join(root, "reports/generated"), { recursive: true });
 await writeFile(reportPath, body);

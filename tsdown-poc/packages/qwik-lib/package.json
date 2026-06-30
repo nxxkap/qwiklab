@@ -7,9 +7,14 @@
   "types": "./lib-types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.qwik.mjs",
-      "require": "./lib/index.qwik.cjs",
-      "types": "./lib-types/index.d.ts"
+      "import": {
+        "types": "./lib-types/index.d.ts",
+        "default": "./lib/index.qwik.mjs"
+      },
+      "require": {
+        "types": "./lib-types/index.d.cts",
+        "default": "./lib/index.qwik.cjs"
+      }
     }
   },
   "files": [
@@ -23,9 +28,11 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "build": "bun run build:vite",
+    "build:vite": "vite build --mode lib && bun run build:types",
     "check": "tsc --noEmit",
-    "build:types": "tsc --emitDeclarationOnly",
-    "validate": "publint && attw --pack ."
+    "build:types": "tsc --emitDeclarationOnly && bun run scripts/write-cjs-types.mjs",
+    "validate": "bun run scripts/validate-package.mjs"
   },
   "devDependencies": {
     "@builder.io/qwik": "1.20.0",
@@ -35,4 +42,3 @@
     "vite-tsconfig-paths": "^4.2.1"
   }
 }
-

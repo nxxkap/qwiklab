@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "qwik build",
-    "build:client": "vite build",
-    "build:preview": "vite build --ssr src/entry.preview.tsx",
+    "build.client": "vite build",
+    "build.preview": "vite build --ssr src/entry.preview.tsx",
     "check": "tsc --incremental --noEmit",
     "dev": "vite --mode ssr",
     "preview": "qwik build preview && vite preview --host 127.0.0.1",
@@ -19,6 +19,7 @@
     "@builder.io/qwik": "1.20.0",
     "@builder.io/qwik-city": "1.20.0",
     "@types/node": "20.19.0",
+    "ignore": "^7.0.5",
     "typescript": "5.4.5",
     "typescript-plugin-css-modules": "latest",
     "undici": "*",
