@@ -16,6 +16,8 @@
     "check": "bun run --cwd packages/qwik-lib check && bun run --cwd apps/consumer check",
     "lint": "markdownlint-cli2 && textlint --cache --ignore-path .gitignore \"**/*.md\"",
     "verify": "bun run check && bun run --cwd packages/qwik-lib validate && bun run --cwd apps/consumer test:ssr",
+    "verify:packed": "bun run scripts/verify-packed-consumer.mjs",
+    "verify:packed:all": "bun run scripts/verify-packed-consumer.mjs vite && bun run scripts/verify-packed-consumer.mjs tsdown && bun run scripts/verify-packed-consumer.mjs vp",
     "report": "bun run scripts/report-build.mjs"
   },
   "trustedDependencies": [
