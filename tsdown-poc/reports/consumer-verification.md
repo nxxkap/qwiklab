@@ -24,17 +24,18 @@ bun run check
 bun run build
 bun run build.preview
 bun run test:ssr
+bun run test:browser
 ```
 
 Results:
 
-| Mode | Tarball install | Typecheck | Client build | SSR preview build | SSR markers |
-| --- | --- | --- | --- | --- | --- |
-| Vite library baseline | Pass | Pass | Pass | Pass | Pass |
-| direct tsdown | Pass | Pass | Pass | Pass | Pass |
-| Vite+ pack | Pass | Pass | Pass | Pass | Pass |
+| Mode | Tarball install | Typecheck | Client build | SSR preview build | SSR markers | Browser click |
+| --- | --- | --- | --- | --- | --- | --- |
+| Vite library baseline | Pass | Pass | Pass | Pass | Pass | Pass |
+| direct tsdown | Pass | Pass | Pass | Pass | Pass | Pass |
+| Vite+ pack | Pass | Pass | Pass | Pass | Pass | Pass |
 
-The SSR marker assertion verifies all of:
+`bun run test:ssr` runs the SSR marker check with `bun:test`. It verifies all of:
 
 - Rendered library label: `Library counter`
 - Initial state: `Count: 2`
@@ -44,15 +45,24 @@ The SSR marker assertion verifies all of:
 
 ## Browser interaction
 
-Each packed consumer was served from `/private/tmp/qwik-tsdown-packed-consumer-<mode>` and verified in the in-app browser.
+Each packed consumer is served from `/private/tmp/qwik-tsdown-packed-consumer-<mode>`.
+`bun run test:browser` ensures Playwright Chromium is installed and then runs the Playwright Test browser spec.
+
+The browser interaction assertion verifies all of:
+
+- Initial state before click: `Count: 2`
+- Button has a Qwik `on:click` QRL containing a chunk/symbol separator
+- State after click: `Count: 5`
+- No browser console warnings/errors
+- No uncaught page exceptions
 
 Observed before click:
 
 | Mode | Initial count | Qwik markers | QRL listener |
 | --- | --- | --- | --- |
-| Vite library baseline | `Count: 2` | `q:base`, `q:container` | `q-COzPPqsP.js#s_9MDawMuq588[0 1]` |
-| direct tsdown | `Count: 2` | `q:base`, `q:container` | `q-DgsPYdmZ.js#s_UoOOB8IKekc[0 1]` |
-| Vite+ pack | `Count: 2` | `q:base`, `q:container` | `q-B3xJRMcs.js#s_Lm5R70hb40c[0 1]` |
+| Vite library baseline | `Count: 2` | `q:base`, `q:container` | Present |
+| direct tsdown | `Count: 2` | `q:base`, `q:container` | Present |
+| Vite+ pack | `Count: 2` | `q:base`, `q:container` | Present |
 
 Observed after click:
 

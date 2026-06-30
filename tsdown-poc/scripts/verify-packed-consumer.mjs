@@ -91,6 +91,7 @@ consumerPackage.dependencies = {
 consumerPackage.trustedDependencies = [
   "@parcel/watcher",
   "esbuild",
+  "playwright",
   "sharp",
 ];
 await writeFile(consumerPackagePath, `${JSON.stringify(consumerPackage, null, 2)}\n`);
@@ -100,6 +101,7 @@ run("bun", ["run", "check"], { cwd: packedRoot });
 run("bun", ["run", "build"], { cwd: packedRoot });
 run("bun", ["run", "build.preview"], { cwd: packedRoot });
 run("bun", ["run", "test:ssr"], { cwd: packedRoot });
+run("bun", ["run", "test:browser"], { cwd: packedRoot });
 
 console.log(
   JSON.stringify(

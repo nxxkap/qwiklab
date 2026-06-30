@@ -23,6 +23,7 @@
   "trustedDependencies": [
     "@parcel/watcher",
     "esbuild",
+    "playwright",
     "sharp"
   ],
   "devDependencies": {

@@ -19,7 +19,7 @@ If adopting tsdown, prefer direct `tsdown` over Vite+ for this narrow package. I
 - Keep a separate `tsc` declaration step plus post-processing for `.d.cts` and Node16 ESM-compatible `.d.ts` import specifiers.
 - Require packed-consumer verification in CI.
 - Cover package validation, tarball install, consumer typecheck, client build, and SSR preview build.
-- Cover SSR marker and browser click checks for at least one packed consumer.
+- Cover SSR marker and browser click checks for each packed consumer mode.
 
 ## Why not unconditional adoption
 
@@ -50,7 +50,7 @@ If adopting tsdown, prefer direct `tsdown` over Vite+ for this narrow package. I
 - Confirm behavior when the library and consumer use different compatible Qwik minor versions.
 - Decide whether internal preserved files in the tarball are acceptable, or whether the build should bundle internals while preserving only public entries.
 - Re-check `tsdown` and Vite+ release notes before adoption; both are moving targets.
-- Add CI jobs for `bun run verify:packed:all` plus one browser interaction check against a packed consumer.
+- Add a CI job for `bun run verify:packed:all`, which now includes SSR marker and browser click checks for every packed mode.
 
 ## Primary sources
 
