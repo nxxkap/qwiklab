@@ -1,9 +1,15 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
 const tarballDir = join(root, "../../tmp/tarballs");
+const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
+const qwikPeerRange = packageJson.peerDependencies?.["@builder.io/qwik"];
+
+if (typeof qwikPeerRange !== "string" || qwikPeerRange.length === 0) {
+  throw new Error("package.json must declare @builder.io/qwik as a peerDependency");
+}
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {

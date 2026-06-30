@@ -36,6 +36,9 @@
     "build:types": "tsc --emitDeclarationOnly && bun run scripts/write-cjs-types.mjs",
     "validate": "bun run scripts/validate-package.mjs"
   },
+  "peerDependencies": {
+    "@builder.io/qwik": "^1.20.0"
+  },
   "devDependencies": {
     "@builder.io/qwik": "1.20.0",
     "@types/node": "20.19.0",
