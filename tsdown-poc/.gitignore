@@ -1,0 +1,15 @@
+.DS_Store
+node_modules/
+dist/
+server/
+lib/
+lib-types/
+.qwik/
+.vite/
+.tsbuildinfo
+.textlintcache
+*.tgz
+test-results/
+playwright-report/
+reports/generated/
+tmp/
