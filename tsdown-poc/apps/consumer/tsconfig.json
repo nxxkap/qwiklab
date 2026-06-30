@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "types": ["vite/client", "@builder.io/qwik-city"]
+  },
+  "include": ["src", "qwik.env.d.ts"]
+}
+

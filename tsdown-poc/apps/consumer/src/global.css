@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #f6f7f9;
+  color: #172033;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+section[data-testid="poc-counter"] {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid #d6dae3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+button {
+  width: fit-content;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid #a7afbf;
+  border-radius: 6px;
+  background: #172033;
+  color: #ffffff;
+  font: inherit;
+}
+

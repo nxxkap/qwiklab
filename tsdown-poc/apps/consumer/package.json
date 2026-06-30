@@ -1,0 +1,28 @@
+{
+  "name": "@poc/consumer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "qwik build",
+    "build:client": "vite build",
+    "build:preview": "vite build --ssr src/entry.preview.tsx",
+    "check": "tsc --incremental --noEmit",
+    "dev": "vite --mode ssr",
+    "preview": "qwik build preview && vite preview --host 127.0.0.1",
+    "test:ssr": "bun test --timeout 20000 tests/ssr.test.mjs"
+  },
+  "dependencies": {
+    "@poc/qwik-lib": "workspace:*"
+  },
+  "devDependencies": {
+    "@builder.io/qwik": "1.20.0",
+    "@builder.io/qwik-city": "1.20.0",
+    "@types/node": "20.19.0",
+    "typescript": "5.4.5",
+    "typescript-plugin-css-modules": "latest",
+    "undici": "*",
+    "vite": "7.3.1",
+    "vite-tsconfig-paths": "^4.2.1"
+  }
+}
