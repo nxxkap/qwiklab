@@ -30,6 +30,7 @@
   "scripts": {
     "build": "bun run build:vite",
     "build:vite": "vite build --mode lib && bun run build:types",
+    "build:tsdown": "tsdown && bun run build:types",
     "check": "tsc --noEmit",
     "build:types": "tsc --emitDeclarationOnly && bun run scripts/write-cjs-types.mjs",
     "validate": "bun run scripts/validate-package.mjs"
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@builder.io/qwik": "1.20.0",
     "@types/node": "20.19.0",
+    "tsdown": "^0.22.3",
     "typescript": "5.4.5",
     "vite": "7.3.1",
     "vite-tsconfig-paths": "^4.2.1"

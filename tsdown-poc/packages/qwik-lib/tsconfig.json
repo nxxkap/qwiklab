@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": "lib-types",
-    "incremental": true,
-    "tsBuildInfoFile": ".tsbuildinfo"
+    "declarationDir": "lib-types"
   },
   "include": ["src"]
 }
-
