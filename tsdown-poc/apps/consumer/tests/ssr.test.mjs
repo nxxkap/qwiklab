@@ -1,5 +1,6 @@
 import { test } from "bun:test";
 import { spawn } from "node:child_process";
+import { getLibraryServerBoundaryInfo } from "@poc/qwik-lib/server";
 
 const host = "127.0.0.1";
 const port = Number(process.env.SSR_TEST_PORT ?? 4179);
@@ -10,6 +11,12 @@ const required = [
   ["Qwik loader", "q:base"],
   ["serialized Qwik container", "q:container"],
   ["lazy click listener", "on:click"],
+  ["showcase label", "Production library showcase"],
+  ["named slot projection", "Consumer supplied summary"],
+  ["default slot projection", "Consumer projected details"],
+  ["context tone", "Tone: focus"],
+  ["context score", "Score: 7"],
+  ["asset image", "data-testid=\"library-asset\""],
 ];
 
 function delay(ms) {
@@ -96,10 +103,16 @@ async function waitForServer(getOutput) {
 }
 
 test("SSR output contains Qwik library markers", async () => {
+  const serverInfo = getLibraryServerBoundaryInfo();
+  if (!serverInfo.qwikVersion || serverInfo.loaderBytes <= 0) {
+    throw new Error(`Invalid server boundary info: ${JSON.stringify(serverInfo)}`);
+  }
+
   const { server, getOutput } = startPreviewServer();
   try {
     const html = await waitForServer(getOutput);
     const missing = required.filter(([, marker]) => !html.includes(marker));
+    const clickListeners = html.match(/on:click/g)?.length ?? 0;
 
     if (missing.length > 0) {
       throw new Error(
@@ -107,6 +120,14 @@ test("SSR output contains Qwik library markers", async () => {
           .map(([label, marker]) => `${label} (${marker})`)
           .join(", ")}`,
       );
+    }
+
+    if (clickListeners < 2) {
+      throw new Error(`Expected at least 2 lazy click listeners, found ${clickListeners}`);
+    }
+
+    if (!/src="(?:data:image\/svg[^"]*|[^"]*library-badge[^"]*)"/.test(html)) {
+      throw new Error("SSR output is missing a rendered SVG asset src");
     }
   } finally {
     await stopServer(server);

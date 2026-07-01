@@ -1,10 +1,10 @@
 # Adoption Decision
 
-Date: 2026-06-30
+Date: 2026-07-01
 
 ## Decision
 
-`tsdown` is conditionally adoptable for JavaScript bundling in this Qwik component library PoC. It is not a drop-in replacement for the documented Qwik Vite library build.
+`tsdown` is conditionally adoptable for JavaScript bundling in this Qwik component library PoC. The expanded fixture removes the earlier concern that the verification target was too small, but tsdown is still not a drop-in replacement for the documented Qwik Vite library build.
 
 Recommended default for production right now: keep the Vite library build unless the project explicitly accepts the added constraints below.
 
@@ -20,6 +20,8 @@ If adopting tsdown, prefer direct `tsdown` over Vite+ for this narrow package. I
 - Require packed-consumer verification in CI.
 - Cover package validation, tarball install, consumer typecheck, client build, and SSR preview build.
 - Cover SSR marker and browser click checks for each packed consumer mode.
+- Keep the richer fixture in the packed-consumer suite: multiple components, public subpath exports, context/provider state, slot projection, inline styles, SVG asset handling, server-only boundary, and a complex `$` closure.
+- Keep the opt-in compatible Qwik minor-version mismatch check separate from normal verification.
 
 ## Why not unconditional adoption
 
@@ -27,7 +29,7 @@ If adopting tsdown, prefer direct `tsdown` over Vite+ for this narrow package. I
 - direct tsdown cannot currently use `qwikVite()` in the same straightforward way. That makes the approach depend on package shape plus the consumer app's Qwik optimizer behavior.
 - tsdown dts generation was not used for the final valid package shape; a `tsc` post-step remains necessary.
 - Vite+ works but adds a young wrapper dependency and emitted warnings from the Qwik/Vite plugin stack. It did not improve correctness over direct tsdown in this fixture.
-- This PoC covers one minimal component and one lazy handler. More complex QRL patterns, styles, multiple entries, secondary exports, and real package publishing still need confirmation.
+- Real package publishing and longer-term maintenance against future Qwik, tsdown, and Vite+ releases still need confirmation.
 
 ## Vite vs direct tsdown vs Vite+
 
@@ -38,6 +40,9 @@ If adopting tsdown, prefer direct `tsdown` over Vite+ for this narrow package. I
 | Package validation | Pass | Pass | Pass |
 | Packed consumer SSR | Pass | Pass | Pass |
 | Packed browser click | Pass | Pass | Pass |
+| Public subpath exports | Pass | Pass | Pass |
+| CSS/assets in fixture | Pass | Pass | Pass |
+| Compatible Qwik minor mismatch | Pass with `1.19.2` consumer | Pass with `1.19.2` consumer | Pass with `1.19.2` consumer |
 | Qwik optimizer plugin in build tool | Works through `qwikVite()` | Direct use failed | Config loads Vite plugins, but pack output still uses tsdown-style config |
 | Type declarations | `tsc` post-step | `tsc` post-step | `tsc` post-step |
 | Main advantage | Documented and least surprising | Fast, explicit, minimal wrapper | Vite-config-centered tsdown wrapper |
@@ -45,12 +50,10 @@ If adopting tsdown, prefer direct `tsdown` over Vite+ for this narrow package. I
 
 ## Additional checks before main development
 
-- Confirm the direct tsdown approach with multiple components, public subpath exports, styles/assets, context/provider usage, and slot projection.
-- Confirm server-only code boundaries and more complex `$` closures.
-- Confirm behavior when the library and consumer use different compatible Qwik minor versions.
+- Decide whether the library peer range should remain `^1.19.0` for mismatch coverage or return to a narrower floor when a future compatible different minor exists above `1.20.0`.
 - Decide whether internal preserved files in the tarball are acceptable, or whether the build should bundle internals while preserving only public entries.
 - Re-check `tsdown` and Vite+ release notes before adoption; both are moving targets.
-- Add a CI job for `bun run verify:packed:all`, which now includes SSR marker and browser click checks for every packed mode.
+- Add CI jobs for `bun run verify:packed:all` and the opt-in `QWIK_CONSUMER_VERSION=<compatible-different-minor> bun run verify:packed:mismatch:all`.
 
 ## Primary sources
 

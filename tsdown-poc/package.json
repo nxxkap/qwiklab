@@ -18,6 +18,8 @@
     "verify": "bun run check && bun run --cwd packages/qwik-lib validate && bun run --cwd apps/consumer test:ssr",
     "verify:packed": "bun run scripts/verify-packed-consumer.mjs",
     "verify:packed:all": "bun run scripts/verify-packed-consumer.mjs vite && bun run scripts/verify-packed-consumer.mjs tsdown && bun run scripts/verify-packed-consumer.mjs vp",
+    "verify:packed:mismatch": "bun run scripts/verify-packed-consumer-mismatch.mjs",
+    "verify:packed:mismatch:all": "bun run scripts/verify-packed-consumer-mismatch.mjs vite tsdown vp",
     "report": "bun run scripts/report-build.mjs"
   },
   "trustedDependencies": [

@@ -29,9 +29,13 @@ This PoC uses primary sources as the decision baseline. Secondary sources are no
 
 - tsdown is a Rolldown-powered library bundler.
 - It supports declaration file generation, multiple output formats, and optional package validation through publint and Are the Types Wrong.
+- It supports CSS handling through `@tsdown/css`; `?inline` CSS imports are expected to become JavaScript strings, which is the shape Qwik `useStyles$` needs.
 - It supports plugins and Rolldown options, but its public documentation does not state Qwik Optimizer package-shape compatibility as a built-in guarantee.
 - Sources:
   - <https://tsdown.dev/>
+  <!-- textlint-disable terminology -->
+  - <https://tsdown.dev/options/css>
+  <!-- textlint-enable terminology -->
   - <https://tsdown.dev/options/dts>
   - <https://tsdown.dev/options/output-format>
   - <https://tsdown.dev/options/lint>
@@ -48,11 +52,16 @@ This PoC uses primary sources as the decision baseline. Secondary sources are no
 The direct `tsdown` or Vite+ result is adoptable only if it satisfies all of the following against a packed consumer install:
 
 - Normal package import works from the consumer app.
+- Public subpath imports work for `@poc/qwik-lib/components`, `@poc/qwik-lib/context`, and `@poc/qwik-lib/server`.
 - SSR succeeds and renders the library component.
 - The SSR HTML contains Qwik listener and state markers needed for resumability.
-- A client interaction invokes a lazy `$` handler and updates state without runtime errors.
+- The consumer route exercises more than one component, context/provider state, named and default slot projection, inline styles, and an imported asset.
+- A client interaction invokes lazy `$` handlers and updates state without runtime errors.
+- At least one `$` handler captures props, context store, local signal state, local configuration, DOM event data, and an imported helper.
+- The server-only public subpath imports successfully in Node/SSR tests and is not imported by the browser route.
 - Package metadata and output files match the Qwik Optimizer expectations, including `qwik` and `.qwik.mjs`.
-- Type declarations resolve from the public package entry.
+- Type declarations resolve from the root package entry and public subpaths.
 - Internal implementation is not exported through `exports` or declarations.
 - Package validation does not report publish-shape or declaration-shape errors.
+- A compatible different-minor Qwik consumer install passes the same packed verification, and the mismatch runner rejects same-minor or out-of-range versions.
 - Compared with the Vite library baseline, the build has a clear advantage in configuration, maintenance, or speed.

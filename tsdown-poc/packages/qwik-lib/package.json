@@ -5,6 +5,19 @@
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "types": "./lib-types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "components": [
+        "./lib-types/components.d.ts"
+      ],
+      "context": [
+        "./lib-types/context.d.ts"
+      ],
+      "server": [
+        "./lib-types/server.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "import": {
@@ -14,6 +27,36 @@
       "require": {
         "types": "./lib-types/index.d.cts",
         "default": "./lib/index.qwik.cjs"
+      }
+    },
+    "./components": {
+      "import": {
+        "types": "./lib-types/components.d.ts",
+        "default": "./lib/components.qwik.mjs"
+      },
+      "require": {
+        "types": "./lib-types/components.d.cts",
+        "default": "./lib/components.qwik.cjs"
+      }
+    },
+    "./context": {
+      "import": {
+        "types": "./lib-types/context.d.ts",
+        "default": "./lib/context.qwik.mjs"
+      },
+      "require": {
+        "types": "./lib-types/context.d.cts",
+        "default": "./lib/context.qwik.cjs"
+      }
+    },
+    "./server": {
+      "import": {
+        "types": "./lib-types/server.d.ts",
+        "default": "./lib/server.qwik.mjs"
+      },
+      "require": {
+        "types": "./lib-types/server.d.cts",
+        "default": "./lib/server.qwik.cjs"
       }
     }
   },
@@ -37,10 +80,11 @@
     "validate": "bun run scripts/validate-package.mjs"
   },
   "peerDependencies": {
-    "@builder.io/qwik": "^1.20.0"
+    "@builder.io/qwik": "^1.19.0"
   },
   "devDependencies": {
     "@builder.io/qwik": "1.20.0",
+    "@tsdown/css": "0.22.3",
     "@types/node": "20.19.0",
     "tsdown": "^0.22.3",
     "typescript": "5.4.5",

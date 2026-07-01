@@ -17,6 +17,8 @@ const sourceConsumerRoot = join(root, "apps/consumer");
 const sourceBaseTsconfig = join(root, "tsconfig.base.json");
 const tarballDir = join(root, "tmp/tarballs");
 const packedRoot = join("/private/tmp", `qwik-tsdown-packed-consumer-${mode}`);
+const verifyMismatch = process.env.VERIFY_QWIK_MISMATCH === "1";
+const mismatchVersion = verifyMismatch ? process.env.QWIK_CONSUMER_VERSION : undefined;
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -40,7 +42,63 @@ function run(command, args, options = {}) {
   return result;
 }
 
+function parseVersion(version) {
+  const match = /^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/.exec(version);
+  if (!match) {
+    throw new Error(`Invalid semver version: ${version}`);
+  }
+  return {
+    major: Number(match[1]),
+    minor: Number(match[2]),
+    patch: Number(match[3]),
+  };
+}
+
+function compareVersions(left, right) {
+  return left.major - right.major || left.minor - right.minor || left.patch - right.patch;
+}
+
+function assertCompatibleMismatch(packageJson) {
+  if (!verifyMismatch) {
+    return;
+  }
+  if (!mismatchVersion) {
+    throw new Error("QWIK_CONSUMER_VERSION is required for mismatch verification");
+  }
+
+  const currentVersion = packageJson.devDependencies?.["@builder.io/qwik"];
+  const peerRange = packageJson.peerDependencies?.["@builder.io/qwik"];
+
+  if (typeof currentVersion !== "string") {
+    throw new Error("Library package must declare @builder.io/qwik as a devDependency");
+  }
+  if (typeof peerRange !== "string" || !peerRange.startsWith("^")) {
+    throw new Error("Mismatch verification currently supports caret Qwik peer ranges only");
+  }
+
+  const current = parseVersion(currentVersion);
+  const candidate = parseVersion(mismatchVersion);
+  const peerBase = parseVersion(peerRange.slice(1));
+
+  if (candidate.major === current.major && candidate.minor === current.minor) {
+    throw new Error(
+      `QWIK_CONSUMER_VERSION must use a different minor than ${currentVersion}`,
+    );
+  }
+  if (
+    candidate.major !== peerBase.major ||
+    compareVersions(candidate, peerBase) < 0
+  ) {
+    throw new Error(
+      `QWIK_CONSUMER_VERSION ${mismatchVersion} is outside peer range ${peerRange}`,
+    );
+  }
+}
+
 await mkdir(tarballDir, { recursive: true });
+
+const libPackage = JSON.parse(await readFile(join(libRoot, "package.json"), "utf8"));
+assertCompatibleMismatch(libPackage);
 
 run("bun", ["run", "--cwd", libRoot, `build:${mode}`]);
 run("bun", ["run", "--cwd", libRoot, "validate"]);
@@ -88,6 +146,13 @@ consumerPackage.dependencies = {
   ...consumerPackage.dependencies,
   "@poc/qwik-lib": `file:${tarballPath}`,
 };
+if (mismatchVersion) {
+  consumerPackage.devDependencies = {
+    ...consumerPackage.devDependencies,
+    "@builder.io/qwik": mismatchVersion,
+    "@builder.io/qwik-city": mismatchVersion,
+  };
+}
 consumerPackage.trustedDependencies = [
   "@parcel/watcher",
   "esbuild",
@@ -107,6 +172,8 @@ console.log(
   JSON.stringify(
     {
       mode,
+      qwikConsumerVersion:
+        mismatchVersion ?? consumerPackage.devDependencies?.["@builder.io/qwik"],
       tarballPath,
       packedConsumerRoot: packedRoot,
       result: "ok",
